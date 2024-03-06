@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CarromBoardBooking from "../BookingPage/BookingPage";
 
 const TimeSchedule = () => {
   const [selectedTime, setSelectedTime] = useState("");
+  const [scheduleData, setScheduleData] = useState(null);
 
   const showBookingDetails = (time) => {
     setSelectedTime(time);
   };
 
+  useEffect(() => {
+    fetch("http://localhost/wordpress/wp-json/carrom/v1/carrom-schedule-today")
+      .then(res => res.json())
+      .then(data => setScheduleData(data));
+
+  }, [])
   return (
     <div className="container mx-auto h-[100vh]">
       <div className="flex flex-col md:flex-row justify-items-center justify-center  items-center gap-6 md:gap-20 pt-5">
@@ -24,15 +31,21 @@ const TimeSchedule = () => {
             <div className="p-4 bg-gray-100 rounded-md">
               <div className="text-lg font-bold mb-4 text-center">Time Schedule</div>
               <div className="grid grid-cols-2 md:grid-cols-3  gap-4">
-                <div
-                  className={`p-2 border border-gray-300 cursor-pointer  hover:bg-green-400 transition duration-300 ${
-                    selectedTime === "10:00 AM - 10:40 AM" ? "bg-green-600 text-white" : ""
-                  }`}
-                  onClick={() => showBookingDetails("10:00 AM - 10:40 AM")}
-                >
-                  9:00 AM - 10:40 AM
-                </div>
-                <div
+
+                {
+                  scheduleData && scheduleData.map((data, index) =>
+                    <div
+                      className={`p-2 border border-gray-300 cursor-pointer  hover:bg-green-400 transition duration-300 ${selectedTime === "10:00 AM - 10:40 AM" ? "bg-green-600 text-white" : ""
+                        }`}
+                      onClick={() => showBookingDetails(`${data.start_at} - ${data.end_at}`)}
+                    >
+                      {data.start_at} - {data.end_at}
+                    </div>
+
+                  )
+                }
+
+                {/* <div
                   className={`p-2 border border-gray-300 cursor-pointer hover:bg-green-400 transition duration-300 ${
                     selectedTime === " 10:40 AM - 11:20 AM" ? "bg-green-600 text-white"  : ""
                   }`}
@@ -167,14 +180,14 @@ const TimeSchedule = () => {
                   onClick={() => showBookingDetails("9:20 PM - 10:00 PM")}
                 >
                   9:20 PM - 10:00 PM
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
         </div>
 
         <div >
-            <CarromBoardBooking/>
+          <CarromBoardBooking />
         </div>
       </div>
     </div>
