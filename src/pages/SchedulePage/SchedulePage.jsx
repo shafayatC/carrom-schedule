@@ -1,24 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CarromBoardBooking from "../BookingPage/BookingPage";
+import { dataContextManager } from "../../App";
 
 const TimeSchedule = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [scheduleData, setScheduleData] = useState(null);
   const [getTableData, setTableData] = useState(null);
+  const [refreshBool, setRefreshBool] = useState(false);
+  const [getUserInfo, setUserInfo, getApiBasicUrl,  scheduleTable, setscheduleTable] = useContext(dataContextManager);
 
   const showBookingDetails = (data) => {
     setSelectedTime(`${data.start_at} - ${data.end_at}`);
     setTableData(data); 
   };
+  const bookingCallBack = (bl) => {
+    console.log(bl)
+    setRefreshBool(bl); 
+  }
 
   useEffect(() => {
-    fetch("http://localhost/wordpress/wp-json/carrom/v1/carrom-schedule-today")
+    fetch(`${getApiBasicUrl}/carrom-schedule-today`)
       .then(res => res.json())
-      .then(data => setScheduleData(data));
-  }, []);
+      .then(data => {console.log(data); setscheduleTable(dt => data)});
+  }, [refreshBool]);
+
 
   return (
     <div>
+      {
+        // console.log(scheduleTable)
+      }
       <div className="container mx-auto h-[100vh]">
         <div className="flex flex-col md:flex-row justify-items-center justify-center  items-center gap-6 md:gap-20 pt-5">
           <div className="flex flex-col justify-center  mt-10 ">
@@ -34,8 +45,8 @@ const TimeSchedule = () => {
               <div className="p-4 bg-gray-100 rounded-md">
                 <div className="text-lg font-bold mb-4 text-center">Time Schedule</div>
                 <div className="grid grid-cols-2 md:grid-cols-3  gap-4">
-                  {scheduleData &&
-                    scheduleData.map((data, index) => (
+                  {scheduleTable &&
+                    scheduleTable.map((data, index) => (
                       <div
                         key={index}
                         className={`p-2 border border-gray-300 cursor-pointer  hover:bg-green-400 transition duration-300 ${
@@ -51,7 +62,7 @@ const TimeSchedule = () => {
             </div>
           </div>
           <div>
-            <CarromBoardBooking  tableData={getTableData}/>
+            <CarromBoardBooking  tableData={getTableData} bookingCallBack={bookingCallBack}/>
           </div>
         </div>
       </div>

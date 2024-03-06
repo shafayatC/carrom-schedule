@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { dataContextManager } from "../../App";
 
 const SignUpPage = ({ onClose }) => {
   const [isSignIn, setIsSignIn] = useState(true);
+
+  const [getUserInfo, setUserInfo, getApiBasicUrl] = useContext(dataContextManager);
 
   const navigate = useNavigate();
   const handleToggle = () => {
@@ -21,7 +24,7 @@ const SignUpPage = ({ onClose }) => {
       password: password,
     }
 
-    fetch("http://localhost/wordpress/wp-json/carrom/v1/carrom-user-login", {
+    fetch(`${getApiBasicUrl}/carrom-user-login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -34,10 +37,12 @@ const SignUpPage = ({ onClose }) => {
         console.log(data);
 
         if (data.status_code == 201) {
-
+          setUserInfo(data);
           alert("User login successfully");
           navigate("/carrom-schedule")
           // handleToggle(); // Switch to sign in mode
+        }else{
+          alert("Username and password is not correct");
         }
       })
       .catch(error => {
@@ -68,7 +73,7 @@ const SignUpPage = ({ onClose }) => {
       alert("Passwords do not match");
     } else {
 
-      fetch("http://localhost/wordpress/wp-json/carrom/v1/carrom-user-reg", {
+      fetch(`${getApiBasicUrl}/carrom-user-reg`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -84,6 +89,8 @@ const SignUpPage = ({ onClose }) => {
 
             alert("User created successfully")
             handleToggle(); // Switch to sign in mode
+          }else{
+            alert(data.message)
           }
         })
         .catch(error => {
