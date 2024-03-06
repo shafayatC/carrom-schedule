@@ -4,9 +4,11 @@ import CarromBoardBooking from "../BookingPage/BookingPage";
 const TimeSchedule = () => {
   const [selectedTime, setSelectedTime] = useState("");
   const [scheduleData, setScheduleData] = useState(null);
+  const [getTableData, setTableData] = useState(null);
 
-  const showBookingDetails = (time) => {
-    setSelectedTime(time);
+  const showBookingDetails = (data) => {
+    setSelectedTime(`${data.start_at} - ${data.end_at}`);
+    setTableData(data); 
   };
 
   useEffect(() => {
@@ -39,7 +41,7 @@ const TimeSchedule = () => {
                         className={`p-2 border border-gray-300 cursor-pointer  hover:bg-green-400 transition duration-300 ${
                           selectedTime === `${data.start_at} - ${data.end_at}` ? "bg-green-600 text-white" : ""
                         }`}
-                        onClick={() => showBookingDetails(`${data.start_at} - ${data.end_at}`)}
+                        onClick={() => showBookingDetails(data)}
                       >
                         {`${data.start_at} - ${data.end_at}`}
                       </div>
@@ -49,7 +51,7 @@ const TimeSchedule = () => {
             </div>
           </div>
           <div>
-            <CarromBoardBooking />
+            <CarromBoardBooking  tableData={getTableData}/>
           </div>
         </div>
       </div>

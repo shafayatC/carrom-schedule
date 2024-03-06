@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CarromBoardBooking = () => {
+const CarromBoardBooking = ({tableData}) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [seats, setSeats] = useState({
     A1: { name: "Rhine", disabled: true },
@@ -20,6 +20,9 @@ const CarromBoardBooking = () => {
 
   return (
     <div className="flex flex-col justify-center mt-10">
+      {
+        console.log(tableData)
+      }
       <div className=" bg-gray-200 rounded-md p-4 w-full md:w-[435px]">
         <div className="text-lg font-bold mb-2 text-center ">Booking Details</div>
         <div className="p-2 bg-white border text-center border-gray-300 rounded-md">
