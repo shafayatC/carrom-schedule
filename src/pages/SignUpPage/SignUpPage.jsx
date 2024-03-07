@@ -2,12 +2,21 @@ import { useContext, useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { dataContextManager } from "../../App";
+import Modal from "../Modal/Modal";
 
 const SignUpPage = ({ onClose }) => {
   const [isSignIn, setIsSignIn] = useState(true);
-
   const [getUserInfo, setUserInfo, getApiBasicUrl] = useContext(dataContextManager);
+  const [isOpen, setIsOpen] = useState(false);
+  const [getMsg, setMsg] = useState("");
 
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
   const navigate = useNavigate();
   const handleToggle = () => {
     setIsSignIn(!isSignIn);
@@ -38,11 +47,13 @@ const SignUpPage = ({ onClose }) => {
 
         if (data.status_code == 201) {
           setUserInfo(data);
-          alert("User login successfully");
+          // alert("User login successfully");
           navigate("/carrom-schedule/table")
           // handleToggle(); // Switch to sign in mode
         }else{
-          alert("Username and password is not correct");
+          // alert("Incorrect Credentials");
+          setMsg("Incorrect Credentials");
+          openModal();
         }
       })
       .catch(error => {
@@ -58,19 +69,21 @@ const SignUpPage = ({ onClose }) => {
     const username = e.target["username"].value;
     const password = e.target["password"].value;
     const confirmPassword = e.target["confirmPassword"].value;
-    const secrete_word = e.target["secrete_word"].value;
+    // const secrete_word = e.target["secrete_word"].value;
 
     const userData = {
       name: name,
       username: username,
       password: password,
-      secrete_word: secrete_word
+      secrete_word: "secrete_word"
     }
 
     console.log(userData); 
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      // alert("Passwords do not match");
+      openModal();
+      setMsg("Passwords do not match");
     } else {
 
       fetch(`${getApiBasicUrl}/carrom-user-reg`, {
@@ -87,10 +100,12 @@ const SignUpPage = ({ onClose }) => {
 
           if (data.status_code == 201) {
 
-            alert("User created successfully")
+            // alert("User created successfully")
             handleToggle(); // Switch to sign in mode
           }else{
-            alert(data.message)
+            // alert(data.message)
+            openModal();
+            setMsg(data.message);
           }
         })
         .catch(error => {
@@ -167,6 +182,8 @@ const SignUpPage = ({ onClose }) => {
           </p>
         </div>
       </div>
+      <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
+
     </div>
   );
 };

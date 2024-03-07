@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import CarromBoardBooking from "../BookingPage/BookingPage";
 import { dataContextManager } from "../../App";
 import { useNavigate } from "react-router-dom";
+import Modal from "../Modal/Modal";
 
 const TimeSchedule = () => {
   const [selectedTime, setSelectedTime] = useState("");
@@ -32,6 +33,7 @@ const TimeSchedule = () => {
   }
 
   return (
+    <>
     <div className="bg">
       {
         // console.log(scheduleTable)
@@ -76,6 +78,8 @@ const TimeSchedule = () => {
         </div>
       </div>
     </div>
+
+    </>
   );
 };
 

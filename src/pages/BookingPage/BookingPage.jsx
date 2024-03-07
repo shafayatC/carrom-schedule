@@ -1,8 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { dataContextManager } from "../../App";
+import Modal from "../Modal/Modal";
 
 const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [getMsg, setMsg] = useState("");
   const [myTableData, setMyTableData] = useState(null);
   const [
     getUserInfo,
@@ -20,7 +22,16 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     A2: { name: "", disabled: false },
   });
 
- 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
 
   useEffect(() => {
     const dataToUpdate =
@@ -117,7 +128,9 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     if (nameOfUser.length == 0) {
       fetchData();
     } else if (quotaLimit > 1) {
-      alert("You can not book more than 2 slots today");
+      // alert("You can not book more than 2 slots today");
+      openModal();
+      setMsg("Daily Limit Reached : Retry Tomorrow");
       return;
     } else {
       tableDataExists == 0 && fetchData();
@@ -205,9 +218,11 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
           </div>
         </div>
         <div className="flex justify-center bg-white p-2 rounded-lg">
-          <h1>Playtime : </h1>
+          <h1>Playtime : {myTableData && myTableData.start_at} - {myTableData && myTableData.end_at}</h1>
         </div>
+
       </div>
+      <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
     </div>
   );
 };
