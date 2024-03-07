@@ -2,12 +2,21 @@ import { useContext, useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { dataContextManager } from "../../App";
+import Modal from "../Modal/Modal";
 
 const SignUpPage = ({ onClose }) => {
   const [isSignIn, setIsSignIn] = useState(true);
-
   const [getUserInfo, setUserInfo, getApiBasicUrl] = useContext(dataContextManager);
+  const [isOpen, setIsOpen] = useState(false);
+  const [getMsg, setMsg] = useState("");
 
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
   const navigate = useNavigate();
   const handleToggle = () => {
     setIsSignIn(!isSignIn);
@@ -38,11 +47,13 @@ const SignUpPage = ({ onClose }) => {
 
         if (data.status_code == 201) {
           setUserInfo(data);
-          alert("User login successfully");
-          navigate("/carrom-schedule")
+          // alert("User login successfully");
+          navigate("/carrom-schedule/table")
           // handleToggle(); // Switch to sign in mode
-        }else{
-          alert("Username and password is not correct");
+        } else {
+          // alert("Incorrect Credentials");
+          setMsg("Incorrect Credentials");
+          openModal();
         }
       })
       .catch(error => {
@@ -58,19 +69,21 @@ const SignUpPage = ({ onClose }) => {
     const username = e.target["username"].value;
     const password = e.target["password"].value;
     const confirmPassword = e.target["confirmPassword"].value;
-    const secrete_word = e.target["secrete_word"].value;
+    // const secrete_word = e.target["secrete_word"].value;
 
     const userData = {
       name: name,
       username: username,
       password: password,
-      secrete_word: secrete_word
+      secrete_word: "secrete_word"
     }
 
-    console.log(userData); 
+    console.log(userData);
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      // alert("Passwords do not match");
+      openModal();
+      setMsg("Passwords do not match");
     } else {
 
       fetch(`${getApiBasicUrl}/carrom-user-reg`, {
@@ -87,10 +100,13 @@ const SignUpPage = ({ onClose }) => {
 
           if (data.status_code == 201) {
 
-            alert("User created successfully")
+            // alert("User created successfully")
             handleToggle(); // Switch to sign in mode
-          }else{
-            alert(data.message)
+            navigate("/signin")
+          } else {
+            // alert(data.message)
+            openModal();
+            setMsg(data.message);
           }
         })
         .catch(error => {
@@ -112,9 +128,8 @@ const SignUpPage = ({ onClose }) => {
           {isSignIn ? (
             <>
               <form onSubmit={handleLogin} className="space-y-4">
-
                 <div>
-                  <label htmlFor="usernameL" className="block">Username</label>
+                  <label htmlFor="usernameL" className="block">User Name</label>
                   <input required type="text" name="usernameL" id="usernameL" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
                 <div>
@@ -132,11 +147,11 @@ const SignUpPage = ({ onClose }) => {
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block">Full Name</label>
-                  <input required type="text" name="name" id="name" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
+                  <input required placeholder="e.g. John Ahmed" type="text" name="name" id="name" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
                 <div>
-                  <label htmlFor="username" className="block">Username</label>
-                  <input required type="text" name="username" id="username" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
+                  <label htmlFor="username" className="block">User Name</label>
+                  <input required placeholder="e.g. COWXX001" type="text" name="username" id="username" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
                 <div>
                   <label htmlFor="password" className="block">Password</label>
@@ -146,11 +161,11 @@ const SignUpPage = ({ onClose }) => {
                   <label htmlFor="confirmPassword" className="block">Confirm password</label>
                   <input required type="password" name="confirmPassword" id="confirmPassword" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
-                <div>
+                {/* <div>
                   <label htmlFor="secretword" className="block">Secret word</label>
                   <p className="text-xs text-rose-900">You need this word to recover your password</p>
                   <input required type="text" name="secrete_word" id="secretword" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
-                </div>
+                </div> */}
                 <button type="submit" className="bg-green-500 text-white font-semibold px-4 py-2 rounded-md w-full">
                   {'Sign Up'}
                 </button>
@@ -167,6 +182,8 @@ const SignUpPage = ({ onClose }) => {
           </p>
         </div>
       </div>
+      <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
+
     </div>
   );
 };

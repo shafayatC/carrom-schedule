@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { dataContextManager } from "../../App";
+import Modal from "../Modal/Modal";
 
-const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
+const CarromBoardBooking = ({ tableData, bookingCallBack, lockTable }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [myTableData, setMyTableData] = useState(null);
   const [
@@ -20,7 +21,17 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     A2: { name: "", disabled: false },
   });
 
- 
+  const [isOpen, setIsOpen] = useState(false);
+  const [getMsg, setMsg] = useState("");
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
 
   useEffect(() => {
     const dataToUpdate =
@@ -84,6 +95,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     const tableDataExists = tableDataExits(nameOfUser);
     console.log(tableDataExists);
 
+
     const fetchData = () => {
       fetch(`${getApiBasicUrl}/carrom-schedule-update`, {
         method: "POST",
@@ -117,7 +129,9 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     if (nameOfUser.length == 0) {
       fetchData();
     } else if (quotaLimit > 1) {
-      alert("You can not book more than 2 slots today");
+      // alert("You can not book more than 2 slots today");
+      openModal();
+      setMsg("Daily Limit Reached : Retry Tomorrow");
       return;
     } else {
       tableDataExists == 0 && fetchData();
@@ -164,8 +178,10 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="A1"
                 name={myTableData && myTableData.a1_userId}
+                fullname={myTableData && myTableData.a1_user_full_name}
                 disabled={myTableData && myTableData.a1_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-1 row-start-2">
@@ -173,8 +189,10 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="B1"
                 name={myTableData && myTableData.b1_userId}
+                fullname={myTableData && myTableData.b1_user_full_name}
                 disabled={myTableData && myTableData.b1_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-3 row-start-2">
@@ -182,8 +200,10 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="B2"
                 name={myTableData && myTableData.b2_userId}
+                fullname={myTableData && myTableData.b2_user_full_name}
                 disabled={myTableData && myTableData.b2_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-2 row-start-3">
@@ -191,8 +211,10 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="A2"
                 name={myTableData && myTableData.a2_userId}
+                fullname={myTableData && myTableData.a2_user_full_name}
                 disabled={myTableData && myTableData.a2_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-2 row-start-2 flex -mt-10 items-center justify-center">
@@ -205,14 +227,16 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
           </div>
         </div>
         <div className="flex justify-center bg-white p-2 rounded-lg">
-          <h1>Playtime : </h1>
+          <h1>Playtime : {myTableData && myTableData.start_at} - {myTableData && myTableData.end_at}</h1>
         </div>
+
       </div>
+      <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
     </div>
   );
 };
 
-const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
+const Seat = ({ seat, name, disabled, bookSeat, getUserInfo, fullname, lockTable }) =>
 
 
   getUserInfo && getUserInfo.username === name ? (
@@ -223,10 +247,10 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
           ? "bg-gray-500 text-white rounded-3xl"
           : "hover:bg-green-600 transition duration-300"
       }`}
-      onClick={() => bookSeat(seat, name)}
+      onClick={() => lockTable && bookSeat(seat, name)}
     >
       {seat}
-      {disabled && <div className="text-xs">{name}</div>}
+      {disabled && <div className="text-xs">{fullname}</div>}
     </div>
   ) : (
     <div
@@ -235,10 +259,10 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
           ? "bg-gray-400 text-gray-600 "
           : "hover:bg-green-600 hover:text-white transition duration-300"
       }`}
-      onClick={() => !disabled && bookSeat(seat, name)}
+      onClick={() => lockTable && !disabled && bookSeat(seat, name)}
     >
       {seat}
-      {disabled && <div className="text-xs">{name}</div>}
+      {disabled && <div className="text-xs">{fullname}</div>}
     </div>
   );
     
