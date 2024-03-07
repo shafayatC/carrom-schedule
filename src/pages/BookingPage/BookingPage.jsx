@@ -4,7 +4,6 @@ import Modal from "../Modal/Modal";
 
 const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [getMsg, setMsg] = useState("");
   const [myTableData, setMyTableData] = useState(null);
   const [
     getUserInfo,
@@ -23,6 +22,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
   });
 
   const [isOpen, setIsOpen] = useState(false);
+  const [getMsg, setMsg] = useState("");
 
   const openModal = () => {
     setIsOpen(true);
@@ -94,6 +94,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     const quotaLimit = countQuotaLimit(getUserInfo.username);
     const tableDataExists = tableDataExits(nameOfUser);
     console.log(tableDataExists);
+
 
     const fetchData = () => {
       fetch(`${getApiBasicUrl}/carrom-schedule-update`, {
@@ -177,6 +178,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="A1"
                 name={myTableData && myTableData.a1_userId}
+                fullname={myTableData && myTableData.a1_user_full_name}
                 disabled={myTableData && myTableData.a1_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -186,6 +188,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="B1"
                 name={myTableData && myTableData.b1_userId}
+                fullname={myTableData && myTableData.b1_user_full_name}
                 disabled={myTableData && myTableData.b1_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -195,6 +198,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="B2"
                 name={myTableData && myTableData.b2_userId}
+                fullname={myTableData && myTableData.b2_user_full_name}
                 disabled={myTableData && myTableData.b2_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -204,6 +208,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="A2"
                 name={myTableData && myTableData.a2_userId}
+                fullname={myTableData && myTableData.a2_user_full_name}
                 disabled={myTableData && myTableData.a2_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -227,7 +232,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
   );
 };
 
-const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
+const Seat = ({ seat, name, disabled, bookSeat, getUserInfo, fullname }) =>
 
 
   getUserInfo && getUserInfo.username === name ? (
@@ -241,7 +246,7 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
       onClick={() => bookSeat(seat, name)}
     >
       {seat}
-      {disabled && <div className="text-xs">{name}</div>}
+      {disabled && <div className="text-xs">{fullname}</div>}
     </div>
   ) : (
     <div
@@ -253,7 +258,7 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
       onClick={() => !disabled && bookSeat(seat, name)}
     >
       {seat}
-      {disabled && <div className="text-xs">{name}</div>}
+      {disabled && <div className="text-xs">{fullname}</div>}
     </div>
   );
     

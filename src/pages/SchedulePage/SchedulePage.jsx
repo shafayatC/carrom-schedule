@@ -10,10 +10,53 @@ const TimeSchedule = () => {
   const [getTableData, setTableData] = useState(null);
   const [refreshBool, setRefreshBool] = useState(false);
   const [getUserInfo, setUserInfo, getApiBasicUrl,  scheduleTable, setscheduleTable] = useContext(dataContextManager);
+  const [isOpen, setIsOpen] = useState(false);
+  const [getMsg, setMsg] = useState("");
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
 
   const showBookingDetails = (data) => {
-    setSelectedTime(`${data.start_at} - ${data.end_at}`);
-    setTableData(data); 
+    
+    console.log(data);
+    let getServerTime = ''; 
+    
+    fetch(`${getApiBasicUrl}/carrom-current-time`)
+    .then(res => res.json())
+    .then(dataResult=>{
+
+      // console.log("current time : "+ dataResult  + " end time: " + data.end_at)
+
+      const compareTime = compareTimes(dataResult, data.end_at);
+      if(compareTime){  
+        setSelectedTime(`${data.start_at} - ${data.end_at}`);
+        setTableData(data); 
+      }else{
+        setMsg("Previous Time-Locked");
+        openModal();
+      }
+      console.log(compareTime); 
+    })
+
+    const compareTimes = (currentTime, scheduleTime) => {
+      {console.log(currentTime + ' ' + scheduleTime)}
+
+      const currentDate = new Date();
+  
+      let scheduleDateTime = new Date(currentDate.toDateString() + " " + scheduleTime);
+      let currentDateTime = new Date(currentDate.toDateString() + " " + currentTime);
+ 
+      console.log(scheduleDateTime);
+      return scheduleDateTime >= currentDateTime;
+  }
+  
+
   };
   const bookingCallBack = (bl) => {
     console.log(bl)
@@ -78,6 +121,8 @@ const TimeSchedule = () => {
         </div>
       </div>
     </div>
+
+    <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
 
     </>
   );
