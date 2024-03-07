@@ -38,7 +38,7 @@ const TimeSchedule = () => {
       setLockTable(compareTime);
       setSelectedTime(`${data.start_at} - ${data.end_at}`);
       setTableData(data); 
-      
+
       if(!compareTime){
         setMsg("Previous Time-Locked");
         openModal();
@@ -123,13 +123,10 @@ const TimeSchedule = () => {
         </div>
 
         <div className="absolute right-[-12px] top-1 md:top-4">
-          <button className="bg-red-600 text-white font-semibold px-6 py-2 rounded-md ">Logout</button>
-
-    
+          <button onClick={logoutFunc} className="bg-red-600 text-white font-semibold px-6 py-2 rounded-md ">Logout</button>
         </div>
       </div>
     </div>
-
     <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
 
     </>
