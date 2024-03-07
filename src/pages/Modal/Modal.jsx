@@ -1,6 +1,6 @@
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
-const Modal = ({ isOpen, onClose }) => {
+const Modal = ({ isOpen, onClose , message }) => {
   return (
     <>
       {isOpen && (
@@ -11,7 +11,8 @@ const Modal = ({ isOpen, onClose }) => {
             </div>
             <div className="relative bg-white rounded-lg p-8 ">
               <div className="flex justify-center items-center mb-4">
-                <h2 className="text-lg font-semibold pt-4">Daily Limit Reached : Retry Tomorrow</h2>
+              {/* <h2 className="text-lg font-semibold pt-4">Daily Limit Reached : Retry Tomorrow</h2> */}
+              <h2 className="text-lg font-semibold pt-4">{message}</h2>
                 <button onClick={onClose} className="absolute top-0 right-0 p-2 text-red-500">
             <IoIosCloseCircleOutline className="text-2xl" />
           </button>

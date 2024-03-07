@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom"
 import HomePage from "./pages/HomePage/HomePage"
 import SchedulePage from "./pages/SchedulePage/SchedulePage"
 import { createContext, useState } from "react";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 export const dataContextManager = createContext();
 
@@ -17,7 +18,13 @@ function App() {
       <dataContextManager.Provider value={[getUserInfo, setUserInfo, getApiBasicUrl, scheduleTable, setscheduleTable]}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/carrom-schedule" element={<SchedulePage />} />
+          {/* <Route path="/carrom-schedule" element={<SchedulePage />} /> */}
+          <Route path="/carrom-schedule/" element={<PrivateRoute />}>
+            <Route
+              path="table"
+              element={<SchedulePage />}
+            />
+          </Route>
         </Routes>
       </dataContextManager.Provider>
     </>

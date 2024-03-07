@@ -22,6 +22,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
   });
 
   const [isOpen, setIsOpen] = useState(false);
+  const [getMsg, setMsg] = useState("");
 
   const openModal = () => {
     setIsOpen(true);
@@ -94,6 +95,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     const tableDataExists = tableDataExits(nameOfUser);
     console.log(tableDataExists);
 
+
     const fetchData = () => {
       fetch(`${getApiBasicUrl}/carrom-schedule-update`, {
         method: "POST",
@@ -127,8 +129,9 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     if (nameOfUser.length == 0) {
       fetchData();
     } else if (quotaLimit > 1) {
-      alert("You can not book more than 2 slots today");
-    
+      // alert("You can not book more than 2 slots today");
+      openModal();
+      setMsg("Daily Limit Reached : Retry Tomorrow");
       return;
     } else {
       tableDataExists == 0 && fetchData();
@@ -175,6 +178,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="A1"
                 name={myTableData && myTableData.a1_userId}
+                fullname={myTableData && myTableData.a1_user_full_name}
                 disabled={myTableData && myTableData.a1_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -184,6 +188,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="B1"
                 name={myTableData && myTableData.b1_userId}
+                fullname={myTableData && myTableData.b1_user_full_name}
                 disabled={myTableData && myTableData.b1_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -193,6 +198,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="B2"
                 name={myTableData && myTableData.b2_userId}
+                fullname={myTableData && myTableData.b2_user_full_name}
                 disabled={myTableData && myTableData.b2_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -202,6 +208,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 getUserInfo={getUserInfo}
                 seat="A2"
                 name={myTableData && myTableData.a2_userId}
+                fullname={myTableData && myTableData.a2_user_full_name}
                 disabled={myTableData && myTableData.a2_userId.length > 0}
                 bookSeat={bookSeat}
               />
@@ -216,24 +223,16 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
           </div>
         </div>
         <div className="flex justify-center bg-white p-2 rounded-lg">
-          <h1>Playtime : </h1>
+          <h1>Playtime : {myTableData && myTableData.start_at} - {myTableData && myTableData.end_at}</h1>
         </div>
-        <div className="flex items-center justify-center mt-2">
-      <button
-        onClick={openModal}
-        className="bg-orange-500  text-white font-semibold py-1 text-sm  px-6 rounded-3xl"
-      >
-        Open Modal
-      </button>
-      <Modal isOpen={isOpen} onClose={closeModal}  />
-    </div>
+
       </div>
-    
+      <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
     </div>
   );
 };
 
-const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
+const Seat = ({ seat, name, disabled, bookSeat, getUserInfo, fullname }) =>
 
 
   getUserInfo && getUserInfo.username === name ? (
@@ -247,7 +246,7 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
       onClick={() => bookSeat(seat, name)}
     >
       {seat}
-      {disabled && <div className="text-xs">{name}</div>}
+      {disabled && <div className="text-xs">{fullname}</div>}
     </div>
   ) : (
     <div
@@ -259,7 +258,7 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo }) =>
       onClick={() => !disabled && bookSeat(seat, name)}
     >
       {seat}
-      {disabled && <div className="text-xs">{name}</div>}
+      {disabled && <div className="text-xs">{fullname}</div>}
     </div>
   );
     

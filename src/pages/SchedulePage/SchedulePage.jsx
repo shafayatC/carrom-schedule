@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import CarromBoardBooking from "../BookingPage/BookingPage";
 import { dataContextManager } from "../../App";
+import { useNavigate } from "react-router-dom";
+import Modal from "../Modal/Modal";
 
 const TimeSchedule = () => {
   const [selectedTime, setSelectedTime] = useState("");
@@ -8,10 +10,53 @@ const TimeSchedule = () => {
   const [getTableData, setTableData] = useState(null);
   const [refreshBool, setRefreshBool] = useState(false);
   const [getUserInfo, setUserInfo, getApiBasicUrl,  scheduleTable, setscheduleTable] = useContext(dataContextManager);
+  const [isOpen, setIsOpen] = useState(false);
+  const [getMsg, setMsg] = useState("");
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
 
   const showBookingDetails = (data) => {
-    setSelectedTime(`${data.start_at} - ${data.end_at}`);
-    setTableData(data); 
+    
+    console.log(data);
+    let getServerTime = ''; 
+    
+    fetch(`${getApiBasicUrl}/carrom-current-time`)
+    .then(res => res.json())
+    .then(dataResult=>{
+
+      // console.log("current time : "+ dataResult  + " end time: " + data.end_at)
+
+      const compareTime = compareTimes(dataResult, data.end_at);
+      if(compareTime){  
+        setSelectedTime(`${data.start_at} - ${data.end_at}`);
+        setTableData(data); 
+      }else{
+        setMsg("Previous Time-Locked");
+        openModal();
+      }
+      console.log(compareTime); 
+    })
+
+    const compareTimes = (currentTime, scheduleTime) => {
+      {console.log(currentTime + ' ' + scheduleTime)}
+
+      const currentDate = new Date();
+  
+      let scheduleDateTime = new Date(currentDate.toDateString() + " " + scheduleTime);
+      let currentDateTime = new Date(currentDate.toDateString() + " " + currentTime);
+ 
+      console.log(scheduleDateTime);
+      return scheduleDateTime >= currentDateTime;
+  }
+  
+
   };
   const bookingCallBack = (bl) => {
     console.log(bl)
@@ -24,9 +69,18 @@ const TimeSchedule = () => {
       .then(data => {console.log(data); setscheduleTable(dt => data)});
   }, [refreshBool]);
 
+  const navigate = useNavigate();
+  const logoutFunc = () => {
+    setUserInfo(null); 
+    navigate("/");
+  }
 
   return (
+
+
+    <>
     <div className="bg-2">
+
       {
         // console.log(scheduleTable)
       }
@@ -65,11 +119,18 @@ const TimeSchedule = () => {
             <CarromBoardBooking  tableData={getTableData} bookingCallBack={bookingCallBack}/>
           </div>
         </div>
+
         <div className="absolute right-[-12px] top-1 md:top-4">
           <button className="bg-red-600 text-white font-semibold px-6 py-2 rounded-md ">Logout</button>
+
+    
         </div>
       </div>
     </div>
+
+    <Modal isOpen={isOpen} onClose={closeModal} message={getMsg} />
+
+    </>
   );
 };
 
