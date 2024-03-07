@@ -38,7 +38,7 @@ const SignUpPage = ({ onClose }) => {
 
         if (data.status_code == 201) {
           setUserInfo(data);
-          alert("User login successfully");
+          // alert("User login successfully");
           navigate("/carrom-schedule")
           // handleToggle(); // Switch to sign in mode
         }else{

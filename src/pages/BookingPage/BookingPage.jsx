@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { dataContextManager } from "../../App";
+import Modal from "../Modal/Modal";
 
 const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -20,7 +21,16 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
     A2: { name: "", disabled: false },
   });
 
- 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
 
   useEffect(() => {
     const dataToUpdate =
@@ -118,6 +128,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
       fetchData();
     } else if (quotaLimit > 1) {
       alert("You can not book more than 2 slots today");
+    
       return;
     } else {
       tableDataExists == 0 && fetchData();
@@ -207,7 +218,17 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
         <div className="flex justify-center bg-white p-2 rounded-lg">
           <h1>Playtime : </h1>
         </div>
+        <div className="flex items-center justify-center mt-2">
+      <button
+        onClick={openModal}
+        className="bg-orange-500  text-white font-semibold py-1 text-sm  px-6 rounded-3xl"
+      >
+        Open Modal
+      </button>
+      <Modal isOpen={isOpen} onClose={closeModal}  />
+    </div>
       </div>
+    
     </div>
   );
 };
