@@ -39,7 +39,7 @@ const SignUpPage = ({ onClose }) => {
         if (data.status_code == 201) {
           setUserInfo(data);
           alert("User login successfully");
-          navigate("/carrom-schedule")
+          navigate("/carrom-schedule/table")
           // handleToggle(); // Switch to sign in mode
         }else{
           alert("Username and password is not correct");
@@ -132,11 +132,11 @@ const SignUpPage = ({ onClose }) => {
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block">Full Name</label>
-                  <input required type="text" name="name" id="name" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
+                  <input required placeholder="e.g. John Ahmed" type="text" name="name" id="name" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
                 <div>
-                  <label htmlFor="username" className="block">Username</label>
-                  <input required type="text" name="username" id="username" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
+                  <label htmlFor="username" className="block">User Name</label>
+                  <input required placeholder="e.g. john123" type="text" name="username" id="username" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
                 <div>
                   <label htmlFor="password" className="block">Password</label>
@@ -146,11 +146,11 @@ const SignUpPage = ({ onClose }) => {
                   <label htmlFor="confirmPassword" className="block">Confirm password</label>
                   <input required type="password" name="confirmPassword" id="confirmPassword" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
-                <div>
+                {/* <div>
                   <label htmlFor="secretword" className="block">Secret word</label>
                   <p className="text-xs text-rose-900">You need this word to recover your password</p>
                   <input required type="text" name="secrete_word" id="secretword" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
-                </div>
+                </div> */}
                 <button type="submit" className="bg-green-500 text-white font-semibold px-4 py-2 rounded-md w-full">
                   {'Sign Up'}
                 </button>

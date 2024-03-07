@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import CarromBoardBooking from "../BookingPage/BookingPage";
 import { dataContextManager } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const TimeSchedule = () => {
   const [selectedTime, setSelectedTime] = useState("");
@@ -24,6 +25,11 @@ const TimeSchedule = () => {
       .then(data => {console.log(data); setscheduleTable(dt => data)});
   }, [refreshBool]);
 
+  const navigate = useNavigate();
+  const logoutFunc = () => {
+    setUserInfo(null); 
+    navigate("/");
+  }
 
   return (
     <div className="bg">
@@ -66,7 +72,7 @@ const TimeSchedule = () => {
           </div>
         </div>
         <div className="absolute right-[-12px] top-4">
-          <button className="bg-red-600 text-white font-semibold px-6 py-2 rounded-md ">Logout</button>
+          <button onClick={logoutFunc} className="bg-red-600 text-white font-semibold px-6 py-2 rounded-md ">Logout</button>
         </div>
       </div>
     </div>
