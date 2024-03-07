@@ -50,7 +50,7 @@ const SignUpPage = ({ onClose }) => {
           // alert("User login successfully");
           navigate("/carrom-schedule/table")
           // handleToggle(); // Switch to sign in mode
-        }else{
+        } else {
           // alert("Incorrect Credentials");
           setMsg("Incorrect Credentials");
           openModal();
@@ -78,7 +78,7 @@ const SignUpPage = ({ onClose }) => {
       secrete_word: "secrete_word"
     }
 
-    console.log(userData); 
+    console.log(userData);
 
     if (password !== confirmPassword) {
       // alert("Passwords do not match");
@@ -102,7 +102,8 @@ const SignUpPage = ({ onClose }) => {
 
             // alert("User created successfully")
             handleToggle(); // Switch to sign in mode
-          }else{
+            navigate("/signin")
+          } else {
             // alert(data.message)
             openModal();
             setMsg(data.message);
@@ -127,9 +128,8 @@ const SignUpPage = ({ onClose }) => {
           {isSignIn ? (
             <>
               <form onSubmit={handleLogin} className="space-y-4">
-
                 <div>
-                  <label htmlFor="usernameL" className="block">Username</label>
+                  <label htmlFor="usernameL" className="block">User Name</label>
                   <input required type="text" name="usernameL" id="usernameL" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
                 <div>
@@ -151,7 +151,7 @@ const SignUpPage = ({ onClose }) => {
                 </div>
                 <div>
                   <label htmlFor="username" className="block">User Name</label>
-                  <input required placeholder="e.g. john123" type="text" name="username" id="username" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
+                  <input required placeholder="e.g. COWXX001" type="text" name="username" id="username" className="border outline-none border-gray-300 px-3 py-2 rounded-md w-full" />
                 </div>
                 <div>
                   <label htmlFor="password" className="block">Password</label>

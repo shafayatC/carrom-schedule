@@ -6,7 +6,7 @@ import Modal from "../Modal/Modal";
 
 const TimeSchedule = () => {
   const [selectedTime, setSelectedTime] = useState("");
-  const [scheduleData, setScheduleData] = useState(null);
+  const [lockTable, setLockTable] = useState(false);
   const [getTableData, setTableData] = useState(null);
   const [refreshBool, setRefreshBool] = useState(false);
   const [getUserInfo, setUserInfo, getApiBasicUrl,  scheduleTable, setscheduleTable] = useContext(dataContextManager);
@@ -34,10 +34,12 @@ const TimeSchedule = () => {
       // console.log("current time : "+ dataResult  + " end time: " + data.end_at)
 
       const compareTime = compareTimes(dataResult, data.end_at);
-      if(compareTime){  
-        setSelectedTime(`${data.start_at} - ${data.end_at}`);
-        setTableData(data); 
-      }else{
+
+      setLockTable(compareTime);
+      setSelectedTime(`${data.start_at} - ${data.end_at}`);
+      setTableData(data); 
+      
+      if(!compareTime){
         setMsg("Previous Time-Locked");
         openModal();
       }
@@ -113,7 +115,7 @@ const TimeSchedule = () => {
             </div>
           </div>
           <div>
-            <CarromBoardBooking  tableData={getTableData} bookingCallBack={bookingCallBack}/>
+            <CarromBoardBooking  tableData={getTableData} bookingCallBack={bookingCallBack} lockTable={lockTable} />
           </div>
         </div>
         <div className="absolute right-[-12px] top-4">

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { dataContextManager } from "../../App";
 import Modal from "../Modal/Modal";
 
-const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
+const CarromBoardBooking = ({ tableData, bookingCallBack, lockTable }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [myTableData, setMyTableData] = useState(null);
   const [
@@ -181,6 +181,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 fullname={myTableData && myTableData.a1_user_full_name}
                 disabled={myTableData && myTableData.a1_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-1 row-start-2">
@@ -191,6 +192,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 fullname={myTableData && myTableData.b1_user_full_name}
                 disabled={myTableData && myTableData.b1_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-3 row-start-2">
@@ -201,6 +203,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 fullname={myTableData && myTableData.b2_user_full_name}
                 disabled={myTableData && myTableData.b2_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-2 row-start-3">
@@ -211,6 +214,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
                 fullname={myTableData && myTableData.a2_user_full_name}
                 disabled={myTableData && myTableData.a2_userId.length > 0}
                 bookSeat={bookSeat}
+                lockTable={lockTable}
               />
             </div>
             <div className="col-start-2 row-start-2 flex -mt-10 items-center justify-center">
@@ -232,7 +236,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack }) => {
   );
 };
 
-const Seat = ({ seat, name, disabled, bookSeat, getUserInfo, fullname }) =>
+const Seat = ({ seat, name, disabled, bookSeat, getUserInfo, fullname, lockTable }) =>
 
 
   getUserInfo && getUserInfo.username === name ? (
@@ -243,7 +247,7 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo, fullname }) =>
           ? "bg-gray-500 text-white rounded-3xl"
           : "hover:bg-green-600 transition duration-300"
       }`}
-      onClick={() => bookSeat(seat, name)}
+      onClick={() => lockTable && bookSeat(seat, name)}
     >
       {seat}
       {disabled && <div className="text-xs">{fullname}</div>}
@@ -255,7 +259,7 @@ const Seat = ({ seat, name, disabled, bookSeat, getUserInfo, fullname }) =>
           ? "bg-gray-400 text-gray-600 "
           : "hover:bg-green-600 hover:text-white transition duration-300"
       }`}
-      onClick={() => !disabled && bookSeat(seat, name)}
+      onClick={() => lockTable && !disabled && bookSeat(seat, name)}
     >
       {seat}
       {disabled && <div className="text-xs">{fullname}</div>}
