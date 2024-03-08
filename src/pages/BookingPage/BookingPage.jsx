@@ -86,12 +86,14 @@ const CarromBoardBooking = ({ tableData, bookingCallBack, lockTable }) => {
 
     const userData = {
       id: tableData.id,
+      user_id: getUserInfo && getUserInfo.username,
       username: nameOfUser,
       table_name: mySeat,
     };
 
     console.log(userData);
     const quotaLimit = countQuotaLimit(getUserInfo.username);
+    const userLimit = getUserInfo && parseInt(getUserInfo.limit);
     const tableDataExists = tableDataExits(nameOfUser);
     console.log(tableDataExists);
 
@@ -107,16 +109,16 @@ const CarromBoardBooking = ({ tableData, bookingCallBack, lockTable }) => {
         .then((res) => res.json())
         .then((data) => {
           // Handle the result
-          console.log(data);
+          console.log(data.status_code);
 
           if (data.status_code == 200) {
-            // alert("table added");
             setBl(!getBl);
             bookingCallBack(getBl);
             updateData(tableData.id, mySeat, nameOfUser);
-            // navigate("/carrom-schedule")
-            // handleToggle(); // Switch to sign in mode
+
           } else {
+            setMsg(data.message);
+            openModal();
             // alert("table not added");
           }
         })
@@ -128,7 +130,7 @@ const CarromBoardBooking = ({ tableData, bookingCallBack, lockTable }) => {
 
     if (nameOfUser.length == 0) {
       fetchData();
-    } else if (quotaLimit > 1) {
+    } else if (quotaLimit > userLimit - 1) {
       // alert("You can not book more than 2 slots today");
       openModal();
       setMsg("Daily Limit Reached : Retry Tomorrow");
@@ -148,6 +150,18 @@ const CarromBoardBooking = ({ tableData, bookingCallBack, lockTable }) => {
       const updatedData = [...scheduleTable];
 
       // Update the object properties
+      updatedData[indexToUpdate][`${seat}`] = name;
+      
+      if (seat == "a1_userId") {
+        updatedData[indexToUpdate]["a1_user_full_name"] = getUserInfo.user_full_name;
+      }else if (seat == "a2_userId") {
+        updatedData[indexToUpdate]["a1_user_full_name"] = getUserInfo.user_full_name;
+      }else if (seat == "b1_userId") {
+        updatedData[indexToUpdate]["b1_user_full_name"] = getUserInfo.user_full_name;
+      }else if (seat == "b2_userId") {
+        updatedData[indexToUpdate]["b2_user_full_name"] = getUserInfo.user_full_name;
+      }
+
       updatedData[indexToUpdate][`${seat}`] = name;
 
       // Update the state with the modified array

@@ -10,8 +10,8 @@ export const dataContextManager = createContext();
 
 function App() {
 
-  // const [getApiBasicUrl] = useState("http://localhost/wordpress/wp-json/carrom/v1"); // for cpanel server
-  const [getApiBasicUrl] = useState("https://api2.thekowcompany.com/wp-json/carrom/v1"); // for cpanel server
+  const [getApiBasicUrl] = useState("http://localhost/wordpress/wp-json/carrom/v1"); // for cpanel server
+  // const [getApiBasicUrl] = useState("https://api2.thekowcompany.com/wp-json/carrom/v1"); // for cpanel server
   const [getUserInfo, setUserInfo] = useState(null);
   const [scheduleTable, setscheduleTable] = useState(null);
 
