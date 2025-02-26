@@ -25,7 +25,7 @@ const HomePage = () => {
       </div>
 
      <div className="absolute bottom-3 left-3">
-      <h1 className="text-red-600 font-bold text-xs bg-white p-2 rounded-xl">Powerd by Shafayat</h1>
+      {/* <h1 className="text-red-600 font-bold text-xs bg-white p-2 rounded-xl">Powerd by Shafayat</h1> */}
      </div>
     </div>
   );
